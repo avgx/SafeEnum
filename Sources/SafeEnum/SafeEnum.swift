@@ -47,3 +47,28 @@ extension SafeEnum: Encodable where T.RawValue: Encodable {
         try container.encode(rawValue)
     }
 }
+
+extension SafeEnum: ExpressibleByUnicodeScalarLiteral where T.RawValue == String {
+
+    @inlinable
+    public init(unicodeScalarLiteral value: UnicodeScalar) {
+        self.init(rawValue: String(value))
+    }
+}
+
+extension SafeEnum: ExpressibleByExtendedGraphemeClusterLiteral where T.RawValue == String {
+
+    @inlinable
+    public init(extendedGraphemeClusterLiteral value: Character) {
+        self.init(rawValue: String(value))
+    }
+}
+
+extension SafeEnum: ExpressibleByStringLiteral where T.RawValue == String {
+
+    /// Interprets the literal as a wire/raw string; ``value`` is `nil` if it does not map to `T`.
+    @inlinable
+    public init(stringLiteral value: String) {
+        self.init(rawValue: value)
+    }
+}

@@ -6,27 +6,17 @@ Small Swift package: decode a `RawRepresentable` field without failing the whole
 
 ## Add the package (SPM)
 
-In Xcode: **File → Add Package Dependencies…** → enter  
-`https://github.com/avgx/SafeEnum`  
-and pick the **`main`** branch (or a version tag once you publish releases).
-
 In `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/avgx/SafeEnum", branch: "main"),
+    .package(url: "https://github.com/avgx/SafeEnum", from: "1.0.0"),
 ],
 targets: [
     .target(name: "MyApp", dependencies: [
         .product(name: "SafeEnum", package: "SafeEnum"),
     ]),
 ]
-```
-
-After the first semver tag (for example `1.0.0`), you can pin with:
-
-```swift
-.package(url: "https://github.com/avgx/SafeEnum", from: "1.0.0"),
 ```
 
 ## Usage
@@ -37,6 +27,9 @@ import SafeEnum
 enum Status: String, Codable, Hashable, Sendable {
     case active, inactive
 }
+
+// When `T.RawValue` is `String`, you can use a string literal:
+let status: SafeEnum<Status> = "active"
 
 struct User: Codable {
     var status: SafeEnum<Status>
@@ -63,10 +56,6 @@ encoder.outputFormatting = [.sortedKeys]
 let data = try encoder.encode(User(status: SafeEnum(.inactive)))
 // {"status":"inactive"}
 ```
-
-## Requirements
-
-Swift 6.2+ (see `Package.swift`). Platforms: iOS 15+, macOS 13+, etc.
 
 ## License
 

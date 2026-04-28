@@ -38,3 +38,13 @@ private struct Payload: Codable {
     #expect(a == b)
     #expect(Set([a, b]).count == 1)
 }
+
+@Test func expressibleByStringLiteral() {
+    let status: SafeEnum<Status> = "active"
+    #expect(status.value == .active)
+    #expect(status.rawValue == "active")
+
+    let unknown: SafeEnum<Status> = "nope"
+    #expect(unknown.value == nil)
+    #expect(unknown.rawValue == "nope")
+}
