@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    name: Build and test (macOS, Xcode Swift)
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Do not use swift-actions/setup-swift here: it installs the OSS swift-*-RELEASE.xctoolchain,
+      # which can assert in GenericSpecializer (ApplySiteCloningHelper / TypeSubstCloner.h) while
+      # optimizing Pulse LoggerStore.initializeViewContext. The Xcode-bundled swift on the runner
+      # matches typical local development and avoids that OSS-only failure mode.
+      - name: Toolchain info
+        run: |
+          xcodebuild -version
+          which swift
+          xcrun -f swift
+          swift --version
+
+      - name: Build (debug)
+        run: swift build -v
+
+      # Release runs a different SIL pipeline (e.g. WMO + -O on Pulse) than debug; OSS
+      # swift-*-RELEASE.xctoolchains have crashed in GenericSpecializer where debug passes.
+      - name: Build (release)
+        run: swift build -c release -v
+
+      - name: Run tests
+        run: swift test -v
