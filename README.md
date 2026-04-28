@@ -4,6 +4,34 @@ Repository: **[github.com/avgx/SafeEnum](https://github.com/avgx/SafeEnum)**
 
 Small Swift package: decode a `RawRepresentable` field without failing the whole payload when the server sends a new or unknown raw value. The wire value is always stored in `rawValue`; use `value` when the raw maps to a known case.
 
+## Why not an optional enum?
+
+`Status?` on a `Codable` model only helps when:
+
+- the field is **missing**, or
+- the JSON value is **`null`**
+
+It does **not** help when the field is present with a **string (or other raw) that is not a known case**: synthesized `Codable` for the enum still **throws** on decode.
+
+`SafeEnum<Status>` keeps the **raw payload** (`rawValue`) and sets `value` to `nil` for unknown raws, so the **rest of the document decodes** and you can log or branch on the wire value.
+
+### Use cases
+
+- API / DTO packages shared across apps
+- Forward-compatible clients (older binaries, newer server enums)
+- Evolving backend contracts without coordinated releases
+- Telemetry when the server sends enum values your build does not know yet
+
+### Example logging
+
+```swift
+if dto.status.value == nil {
+    logger.warning("Unknown status: \(dto.status.rawValue)")
+}
+```
+
+(`dto` is your decoded model, e.g. `User`; use your app’s logging API instead of `logger` if needed.)
+
 ## Add the package (SPM)
 
 In `Package.swift`:
