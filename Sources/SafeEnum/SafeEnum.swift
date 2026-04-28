@@ -33,6 +33,14 @@ where T: RawRepresentable & Hashable & Sendable,
     }
 }
 
+extension SafeEnum: CustomStringConvertible {
+
+    /// String representation of ``rawValue`` (for logging).
+    public var description: String {
+        String(describing: rawValue)
+    }
+}
+
 extension SafeEnum: Decodable where T.RawValue: Decodable {
 
     /// Decodes a single encoded scalar as ``rawValue``, then applies `init(rawValue:)`.
