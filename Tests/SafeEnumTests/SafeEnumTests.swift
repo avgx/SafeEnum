@@ -48,3 +48,11 @@ private struct Payload: Codable {
     #expect(unknown.value == nil)
     #expect(unknown.rawValue == "nope")
 }
+
+@Test func unwrapOrReturnsValueOrFallback() {
+    let known = SafeEnum<Status>(rawValue: "active")
+    #expect(known.unwrap(or: .inactive) == .active)
+
+    let unknown = SafeEnum<Status>(rawValue: "unknown")
+    #expect(unknown.unwrap(or: .inactive) == .inactive)
+}

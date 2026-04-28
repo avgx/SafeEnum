@@ -25,6 +25,12 @@ where T: RawRepresentable & Hashable & Sendable,
         self.value = value
         self.rawValue = value.rawValue
     }
+
+    /// Returns ``value`` when it is non-`nil`; otherwise returns `fallback`.
+    @inlinable
+    public func unwrap(or fallback: T) -> T {
+        value ?? fallback
+    }
 }
 
 extension SafeEnum: Decodable where T.RawValue: Decodable {

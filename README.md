@@ -46,6 +46,9 @@ let u1 = try decoder.decode(User.self, from: #"{"status":"active"}"#.data(using:
 let u2 = try decoder.decode(User.self, from: #"{"status":"legacy_or_typo"}"#.data(using: .utf8)!)
 // u2.status.value == nil
 // u2.status.rawValue == "legacy_or_typo"  // log or migrate later
+
+// Default for app logic / UI when the server sends an unknown raw:
+let resolved = u2.status.unwrap(or: .inactive)
 ```
 
 Encoding writes the same scalar as `rawValue`:
