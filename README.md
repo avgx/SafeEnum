@@ -1,22 +1,32 @@
 # SafeEnum
 
+Repository: **[github.com/avgx/SafeEnum](https://github.com/avgx/SafeEnum)**
+
 Small Swift package: decode a `RawRepresentable` field without failing the whole payload when the server sends a new or unknown raw value. The wire value is always stored in `rawValue`; use `value` when the raw maps to a known case.
 
 ## Add the package (SPM)
 
-In Xcode: **File → Add Package Dependencies…** and point to this repository or a local checkout path.
+In Xcode: **File → Add Package Dependencies…** → enter  
+`https://github.com/avgx/SafeEnum`  
+and pick the **`main`** branch (or a version tag once you publish releases).
 
 In `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(path: "../SafeEnum") // or .package(url: "…", from: "1.0.0")
+    .package(url: "https://github.com/avgx/SafeEnum", branch: "main"),
 ],
 targets: [
     .target(name: "MyApp", dependencies: [
         .product(name: "SafeEnum", package: "SafeEnum"),
     ]),
 ]
+```
+
+After the first semver tag (for example `1.0.0`), you can pin with:
+
+```swift
+.package(url: "https://github.com/avgx/SafeEnum", from: "1.0.0"),
 ```
 
 ## Usage
@@ -60,4 +70,4 @@ Swift 6.2+ (see `Package.swift`). Platforms: iOS 15+, macOS 13+, etc.
 
 ## License
 
-Add your license here if you publish the package.
+[MIT](https://github.com/avgx/SafeEnum/blob/main/LICENSE). Full text is in the [`LICENSE`](LICENSE) file in this repository.
